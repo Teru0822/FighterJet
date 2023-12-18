@@ -241,10 +241,6 @@ void disp()
             }
         }
 
-        //ŠÔˆá‚¦‚½
-
-        //ŠÔˆá‚¦‚½
-
         glEnableClientState(GL_VERTEX_ARRAY);
 
 
