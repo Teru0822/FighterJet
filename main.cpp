@@ -49,6 +49,7 @@ bool timeOver = false;
 
 //int
 int bulletNUM = 0;
+int frameCount = 0;
 int lastSec = 0;
 int score = 0;
 int damage = 0;
@@ -95,6 +96,7 @@ std::pair<std::vector<double>, std::vector<double>> CoordinateXY;
 //ä÷êîÇÃêÈåæ
 void DISPLAY_TEXT(int x, int y, char* string);
 void DRAW_STRING(int x, int y, char* string, void* font);
+void Bullet(int num);
 void disp()
 {
     /*
@@ -313,15 +315,33 @@ void disp()
             LLMissileCont += 0.5 / 300.0;
         }
         
+        //boolBulletÇ™trueÇÃéûforï™ÇçÏê¨Çµë±ÇØÇÈ
         if (boolBullet == true)
         {
-            glPushMatrix();
-            glTranslatef(movingBulletX[bulletNUM], movingBulletY[bulletNUM], movingBulletZ[bulletNUM]);
-            glVertexPointer(3, GL_FLOAT, 0, Bulletvertex);
-            makeBullet(0.3, 0.3, 0.3);
-            glPopMatrix();
+            frameCount++;
+            if (frameCount > 100)
+            {
+                frameCount = 0;
+                bulletNUM++;
+                movingBulletX[bulletNUM-1] = -_movingXPoint;
+                movingBulletY[bulletNUM-1] = -_movingYPoint;
+#pragma omp parallel for
+                for (int i = 0; i < bulletNUM; i++)
+                {
+                    Bullet(i);
+                }
+            }
         }
 
+        //if (boolBullet == true)
+        //{
+        //    glPushMatrix();
+        //    glTranslatef(movingBulletX[bulletNUM], movingBulletY[bulletNUM], movingBulletZ[bulletNUM]);
+        //    glVertexPointer(3, GL_FLOAT, 0, Bulletvertex);
+        //    makeBullet(0.3, 0.3, 0.3);
+        //    glPopMatrix();
+        //}
+        
 
 
         glPushMatrix();
@@ -377,6 +397,19 @@ void disp()
         glFlush();
 }
 
+void Bullet(int num)
+{
+    for (int i = 0; i < 1000; i++)
+    {
+        glPushMatrix();
+        glTranslatef(movingBulletX[num], movingBulletY[num], movingBulletZ[num] -= 0.00008);
+        glVertexPointer(3, GL_FLOAT, 0, Bulletvertex);
+        makeBullet(0.3, 0.3, 0.3);
+        glPopMatrix();
+        glutSwapBuffers();
+        glFlush();
+    }
+}
 
 void reshape(int width, int height) 
 {
@@ -391,6 +424,7 @@ void reshape(int width, int height)
     _movingYPoint = 0;
     y = 0;
 }
+
 
 void InitialProc(const std::unordered_map<std::string,std::string>& maps)
 {
@@ -793,7 +827,6 @@ void idle(void)
         LLPosCheck[1] = -_movingYPoint;
         LLPosCheck[2] = 0;
     }
-    #pragma omp parallel for
     for (int i = 0; i < 3; i++)
     {
         if (enemyPosCheck[i] + 0.62 > RRPosCheck[i] && RRPosCheck[i] > enemyPosCheck[i] - 0.62)
@@ -810,7 +843,6 @@ void idle(void)
 
     }
     HitCheck = 0;
-    #pragma omp parallel for
     for (int i = 0; i < 3; i++)
     {
         if (enemyPosCheck[i] + 0.62 > RLPosCheck[i] && RLPosCheck[i] > enemyPosCheck[i] - 0.62)
@@ -826,7 +858,6 @@ void idle(void)
         }
     }
     HitCheck = 0;
-    #pragma omp parallel for
     for (int i = 0; i < 3; i++)
     {
         if (enemyPosCheck[i] + 0.62 > LRPosCheck[i] && LRPosCheck[i] > enemyPosCheck[i] - 0.62)
@@ -842,7 +873,6 @@ void idle(void)
         }
     }
     HitCheck = 0;
-    #pragma omp parallel for
     for (int i = 0; i < 3; i++)
     {
         if (enemyPosCheck[i] + 0.62 > LLPosCheck[i] && LLPosCheck[i] > enemyPosCheck[i] - 0.62)
@@ -964,12 +994,11 @@ void mouse(int button, int state, int x, int y)//É}ÉEÉXÇÉNÉäÉbÉNÇ∑ÇÈèuä‘ÇµÇ©ì«Ç
                 if (boolBullet == true)
                 {
                     boolBullet = false;
+                    bulletNUM = 0;
                 }
                 else
                 {
                     boolBullet = true;
-                    movingBulletX[bulletNUM] = x;
-                    movingBulletY[bulletNUM] = y;
 
                 }
 
@@ -989,12 +1018,14 @@ void passiveMotion(int x, int y)
 }
 void clickingMotion(int x, int y)//ÉNÉäÉbÉNÇµÇ»Ç™ÇÁìÆÇ©Ç≥Ç»Ç¢Ç∆ì«Ç‹Ç»Ç¢
 {
-    if (boolBullet == true)
+    if (pauseBool == false && dead == false && timeOver == false)
     {
-        movingBulletX[bulletNUM] = x;
-        movingBulletY[bulletNUM] = y;
-
+        _movingXPoint -= (x - 900) / 50.0;
+        _movingYPoint += (y - 500) / 50.0;
+        glutWarpPointer(900, 500);
+        glutMouseFunc(mouse);
     }
+
 }
 void DISPLAY_TEXT(int x, int y, char* string) {
     glDisable(GL_LIGHTING);
