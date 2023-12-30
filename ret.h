@@ -11,22 +11,6 @@ void makeRet()
 {
     glPointSize(3);
     glColor3f(0, 1, 1);
-    glBegin(GL_LINES);  //ê¸ÇÃï`é 
-    {
-        for (int i = 0; i < RlineDataSize; i++) {
-            glArrayElement(Rlines[i * 3]);
-            glArrayElement(Rlines[i * 3 + 1]);
-
-            glArrayElement(Rlines[i * 3 + 1]);
-            glArrayElement(Rlines[i * 3 + 2]);
-
-            glArrayElement(Rlines[i * 3 + 2]);
-            glArrayElement(Rlines[i * 3]);
-        }
-    }
-    glEnd();
-
-    glColor3f(0, 1, 1);
     glBegin(GL_TRIANGLES); //ñ ÇÃï`é 
     {
         for (int i = 0; i < RlineDataSize; i++) {

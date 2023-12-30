@@ -133,6 +133,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="3ret.h" />
     <ClInclude Include="ammo.h" />
     <ClInclude Include="bullet.h" />
     <ClInclude Include="cockPit.h" />
