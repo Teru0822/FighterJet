@@ -174,19 +174,19 @@ void disp()
         glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
         glMaterialf(GL_FRONT, GL_SHININESS, shininess);
 
-        glColor3f(1, 1, 1);
-        glBegin(GL_TRIANGLES);
-        glNormal3f(0, 1, 0);
-        glVertex3f(100, -20, -200);
-        glVertex3f(100, -20, 10);
-        glVertex3f(-100, -20, -200);
-        glEnd();
-        glBegin(GL_TRIANGLES);
-        glNormal3f(0, 1, 0);
-        glVertex3f(-100, -20, 10);
-        glVertex3f(100, -20, 10);
-        glVertex3f(-100, -20, -200);
-        glEnd();
+        //glColor3f(1, 1, 1);
+        //glBegin(GL_TRIANGLES);
+        //glNormal3f(0, 1, 0);
+        //glVertex3f(100, -20, -200);
+        //glVertex3f(100, -20, 10);
+        //glVertex3f(-100, -20, -200);
+        //glEnd();
+        //glBegin(GL_TRIANGLES);
+        //glNormal3f(0, 1, 0);
+        //glVertex3f(-100, -20, 10);
+        //glVertex3f(100, -20, 10);
+        //glVertex3f(-100, -20, -200);
+        //glEnd();
 
 
         glColor3f(1, 1, 1);
@@ -316,22 +316,6 @@ void disp()
         }
         
         //boolBulletÇ™trueÇÃéûforï™ÇçÏê¨Çµë±ÇØÇÈ
-        if (boolBullet == true)
-        {
-            frameCount++;
-            if (frameCount > 100)
-            {
-                frameCount = 0;
-                bulletNUM++;
-                movingBulletX[bulletNUM-1] = -_movingXPoint;
-                movingBulletY[bulletNUM-1] = -_movingYPoint;
-#pragma omp parallel for
-                for (int i = 0; i < bulletNUM; i++)
-                {
-                    Bullet(i);
-                }
-            }
-        }
 
         //if (boolBullet == true)
         //{
@@ -392,6 +376,26 @@ void disp()
 
 
         glPopMatrix();
+        if (boolBullet == true)
+        {
+            frameCount++;
+            if (frameCount > 100)
+            {
+                frameCount = 0;
+                movingBulletX[bulletNUM] = -_movingXPoint;
+                movingBulletY[bulletNUM] = -_movingYPoint;
+                bulletNUM++;
+                if (bulletNUM == 300)
+                {
+                    bulletNUM = 0;
+                }
+            }
+        }
+#pragma omp parallel for
+        for (int i = 0; i < bulletNUM; i++)
+        {
+            Bullet(i);
+        }
 
         glutSwapBuffers();
         glFlush();
@@ -399,15 +403,14 @@ void disp()
 
 void Bullet(int num)
 {
-    for (int i = 0; i < 1000; i++)
+    if (movingBulletZ[num] > -100)
     {
         glPushMatrix();
-        glTranslatef(movingBulletX[num], movingBulletY[num], movingBulletZ[num] -= 0.00008);
+        glTranslatef(movingBulletX[num], movingBulletY[num], movingBulletZ[num]);
         glVertexPointer(3, GL_FLOAT, 0, Bulletvertex);
-        makeBullet(0.3, 0.3, 0.3);
+        makeBullet(1, 1, 1);
         glPopMatrix();
-        glutSwapBuffers();
-        glFlush();
+        movingBulletZ[num] -= 0.2;
     }
 }
 
@@ -668,6 +671,12 @@ void keyboard(unsigned char key, int x, int y)
             thirdSpec = true;
             pauseBool = true;
             timeOver = false;
+
+
+
+            memset(movingBulletX, 0.0, sizeof(movingBulletX));
+            memset(movingBulletY, 0.0, sizeof(movingBulletY));
+            memset(movingBulletZ, 0.0, sizeof(movingBulletZ));
 
             score = 0;
             damage = 0;
@@ -994,7 +1003,7 @@ void mouse(int button, int state, int x, int y)//É}ÉEÉXÇÉNÉäÉbÉNÇ∑ÇÈèuä‘ÇµÇ©ì«Ç
                 if (boolBullet == true)
                 {
                     boolBullet = false;
-                    bulletNUM = 0;
+
                 }
                 else
                 {
