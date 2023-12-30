@@ -359,7 +359,7 @@ void disp()
 
         if (thirdSpec == true)
         {
-            glVertexPointer(3, GL_FLOAT, 0, 3Rvertex);
+            glVertexPointer(3, GL_FLOAT, 0, ThirdRvertex);
             make3Ret();
 
         }
@@ -509,11 +509,11 @@ void InitialProc(const std::unordered_map<std::string,std::string>& maps)
     }
     else
     {
-        while (fscanf_s(fp3retVData, "%f, %f, %f", &3Rvertex[3RvertexDataSize * 3], &3Rvertex[3RvertexDataSize * 3 + 1], &3Rvertex[3RvertexDataSize * 3 + 2]) != EOF)
-            3RvertexDataSize++;
+        while (fscanf_s(fp3retVData, "%f, %f, %f", &ThirdRvertex[ThirdRvertexDataSize * 3], &ThirdRvertex[ThirdRvertexDataSize * 3 + 1], &ThirdRvertex[ThirdRvertexDataSize * 3 + 2]) != EOF)
+            ThirdRvertexDataSize++;
 
-        while (fscanf_s(fp3retFData, "%d, %d, %d", &3Rlines[3RlineDataSize * 3], &3Rlines[3RlineDataSize * 3 + 1], &3Rlines[3RlineDataSize * 3 + 2]) != EOF)
-            3RlineDataSize++;
+        while (fscanf_s(fp3retFData, "%d, %d, %d", &ThirdRlines[ThirdRlineDataSize * 3], &ThirdRlines[ThirdRlineDataSize * 3 + 1], &ThirdRlines[ThirdRlineDataSize * 3 + 2]) != EOF)
+            ThirdRlineDataSize++;
     }
 
     if ((fpFire1VData == NULL) || (fpFire1FData == NULL)) {
