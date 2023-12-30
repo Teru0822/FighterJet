@@ -19,6 +19,7 @@
 #include "missileLeftLeft.h"
 #include "enemy.h"
 #include "bullet.h"
+#include "3ret.h"
 #include <vector>
 #include <string>
 #include <map>
@@ -161,7 +162,7 @@ void disp()
 
         if (thirdSpec == true)
         {
-            gluLookAt(0 - _movingXPoint, 1 - _movingYPoint, 10, 0 - _movingXPoint, 0 - _movingYPoint, 0, 0, 1, 0);
+            gluLookAt(0 - _movingXPoint, 1 - _movingYPoint, 10, 0 - _movingXPoint, 1 - _movingYPoint, 0, 0, 1, 0);
         }
         else
         {
@@ -174,21 +175,22 @@ void disp()
         glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
         glMaterialf(GL_FRONT, GL_SHININESS, shininess);
 
-        //glColor3f(1, 1, 1);
-        //glBegin(GL_TRIANGLES);
-        //glNormal3f(0, 1, 0);
-        //glVertex3f(100, -20, -200);
-        //glVertex3f(100, -20, 10);
-        //glVertex3f(-100, -20, -200);
-        //glEnd();
-        //glBegin(GL_TRIANGLES);
-        //glNormal3f(0, 1, 0);
-        //glVertex3f(-100, -20, 10);
-        //glVertex3f(100, -20, 10);
-        //glVertex3f(-100, -20, -200);
-        //glEnd();
+        //’n–Ê
+        glColor3f(1, 1, 1);
+        glBegin(GL_TRIANGLES);
+        glNormal3f(0, 1, 0);
+        glVertex3f(100, -20, -200);
+        glVertex3f(100, -20, 10);
+        glVertex3f(-100, -20, -200);
+        glEnd();
+        glBegin(GL_TRIANGLES);
+        glNormal3f(0, 1, 0);
+        glVertex3f(-100, -20, 10);
+        glVertex3f(100, -20, 10);
+        glVertex3f(-100, -20, -200);
+        glEnd();
 
-
+        //“Vˆä
         glColor3f(1, 1, 1);
         glBegin(GL_QUADS);
         glNormal3f(0, 1, 0);
@@ -355,9 +357,17 @@ void disp()
         glVertexPointer(3, GL_FLOAT, 0, vertex);
         makeShip(0.3, 0.3, 0.3);
 
-        glVertexPointer(3, GL_FLOAT, 0, Rvertex);
-        makeRet();
+        if (thirdSpec == true)
+        {
+            glVertexPointer(3, GL_FLOAT, 0, 3Rvertex);
+            make3Ret();
 
+        }
+        else
+        {
+            glVertexPointer(3, GL_FLOAT, 0, Rvertex);
+            makeRet();
+        }
         glVertexPointer(3, GL_FLOAT, 0, Wingvertex);
         makeWing(0.4, 0.4, 0.4);
 
@@ -436,7 +446,7 @@ void InitialProc(const std::unordered_map<std::string,std::string>& maps)
     memset(movingBulletZ, 0.0, sizeof(movingBulletZ));
 
     FILE* fpVData, * fpFData, * fpretVData, * fpretFData, * fpFire1VData, * fpFire1FData, * fpFire2VData, * fpFire2FData, * fpWingVData, * fpWingFData, * fpTailWingVData, * fpTailWingFData, * fpCockPitVData, * fpCockPitFData, * fpRightRightMissileVData, * fpRightRightMissileFData, * fpRightLeftMissileVData, * fpRightLeftMissileFData, * fpLeftRightMissileVData, * fpLeftRightMissileFData, * fpLeftLeftMissileVData, * fpLeftLeftMissileFData;
-    FILE* fpEnemyVData, * fpEnemyFData, *fpBulletVData,*fpBulletFData;
+    FILE* fpEnemyVData, * fpEnemyFData, * fpBulletVData, * fpBulletFData, * fp3retVData, * fp3retFData;
     
     fopen_s(&fpVData,maps.at("mainShipV").c_str(), "r");//vData.txt‚ðargs[0]‚É“ü‚ê‚Ä‚¢‚é
     fopen_s(&fpFData, maps.at("mainShipF").c_str(), "r");
@@ -464,6 +474,8 @@ void InitialProc(const std::unordered_map<std::string,std::string>& maps)
     fopen_s(&fpEnemyFData, maps.at("enemyF").c_str(), "r");
     fopen_s(&fpBulletVData, maps.at("bulletV").c_str(), "r");
     fopen_s(&fpBulletFData, maps.at("bulletF").c_str(), "r");
+    fopen_s(&fp3retVData, maps.at("3retV").c_str(), "r");
+    fopen_s(&fp3retFData, maps.at("3retF").c_str(), "r");
 
     
 
@@ -491,6 +503,19 @@ void InitialProc(const std::unordered_map<std::string,std::string>& maps)
         while (fscanf_s(fpretFData, "%d, %d, %d", &Rlines[RlineDataSize * 3], &Rlines[RlineDataSize * 3 + 1], &Rlines[RlineDataSize * 3 + 2]) != EOF)
             RlineDataSize++;
     }
+    if ((fp3retVData == NULL) || (fp3retFData == NULL)) {
+        printf("file error!!\n");
+        return;
+    }
+    else
+    {
+        while (fscanf_s(fp3retVData, "%f, %f, %f", &3Rvertex[3RvertexDataSize * 3], &3Rvertex[3RvertexDataSize * 3 + 1], &3Rvertex[3RvertexDataSize * 3 + 2]) != EOF)
+            3RvertexDataSize++;
+
+        while (fscanf_s(fp3retFData, "%d, %d, %d", &3Rlines[3RlineDataSize * 3], &3Rlines[3RlineDataSize * 3 + 1], &3Rlines[3RlineDataSize * 3 + 2]) != EOF)
+            3RlineDataSize++;
+    }
+
     if ((fpFire1VData == NULL) || (fpFire1FData == NULL)) {
         printf("file error!!\n");
         return;
@@ -1130,6 +1155,8 @@ int main(int argc, char** argv)
     map.insert(std::make_pair("wingF", "config/wingFData.txt"));
     map.insert(std::make_pair("bulletV", "config/bulletVData.txt"));
     map.insert(std::make_pair("bulletF", "config/bulletFData.txt"));
+    map.insert(std::make_pair("3retV", "config/3retVData.txt"));
+    map.insert(std::make_pair("3retF", "config/3retFData.txt"));
 
     //for (const auto& m:n)
     //{
