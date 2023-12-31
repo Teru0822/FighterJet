@@ -138,6 +138,7 @@
     <ClInclude Include="bullet.h" />
     <ClInclude Include="cockPit.h" />
     <ClInclude Include="enemy.h" />
+    <ClInclude Include="field.h" />
     <ClInclude Include="fire1.h" />
     <ClInclude Include="fire2.h" />
     <ClInclude Include="makefloor.h" />

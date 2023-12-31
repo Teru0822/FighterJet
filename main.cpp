@@ -20,6 +20,7 @@
 #include "enemy.h"
 #include "bullet.h"
 #include "3ret.h"
+#include "field.h"
 #include <vector>
 #include <string>
 #include <map>
@@ -174,29 +175,30 @@ void disp()
         glMaterialf(GL_FRONT, GL_SHININESS, shininess);
 
         //’n–Ê
-        glColor3f(1, 1, 1);
-        glBegin(GL_TRIANGLES);
-        glNormal3f(0, 1, 0);
-        glVertex3f(100, -20, -200);
-        glVertex3f(100, -20, 10);
-        glVertex3f(-100, -20, -200);
-        glEnd();
-        glBegin(GL_TRIANGLES);
-        glNormal3f(0, 1, 0);
-        glVertex3f(-100, -20, 10);
-        glVertex3f(100, -20, 10);
-        glVertex3f(-100, -20, -200);
-        glEnd();
-
+        //glColor3f(1, 1, 1);
+        //glBegin(GL_TRIANGLES);
+        //glNormal3f(0, 1, 0);
+        //glVertex3f(100, -20, -200);
+        //glVertex3f(100, -20, 10);
+        //glVertex3f(-100, -20, -200);
+        //glEnd();
+        //glBegin(GL_TRIANGLES);
+        //glNormal3f(0, 1, 0);
+        //glVertex3f(-100, -20, 10);
+        //glVertex3f(100, -20, 10);
+        //glVertex3f(-100, -20, -200);
+        //glEnd();
+        glVertexPointer(3, GL_FLOAT, 0, Fieldvertex);
+        makeField(1, 1, 1);
         //“Vˆä
-        glColor3f(1, 1, 1);
-        glBegin(GL_QUADS);
-        glNormal3f(0, 1, 0);
-        glVertex3f(100, 40, -200);
-        glVertex3f(-100, 40, -200);
-        glVertex3f(-100, 40, 10);
-        glVertex3f(100, 40, 10);
-        glEnd();
+        //glColor3f(1, 1, 1);
+        //glBegin(GL_QUADS);
+        //glNormal3f(0, 1, 0);
+        //glVertex3f(100, 40, -200);
+        //glVertex3f(-100, 40, -200);
+        //glVertex3f(-100, 40, 10);
+        //glVertex3f(100, 40, 10);
+        //glEnd();
 
         if (pauseBool == false && dead == false && timeOver == false)
         {
@@ -447,7 +449,7 @@ void InitialProc(const std::unordered_map<std::string,std::string>& maps)
     memset(movingBulletZ, 0.0, sizeof(movingBulletZ));
 
     FILE* fpVData, * fpFData, * fpretVData, * fpretFData, * fpFire1VData, * fpFire1FData, * fpFire2VData, * fpFire2FData, * fpWingVData, * fpWingFData, * fpTailWingVData, * fpTailWingFData, * fpCockPitVData, * fpCockPitFData, * fpRightRightMissileVData, * fpRightRightMissileFData, * fpRightLeftMissileVData, * fpRightLeftMissileFData, * fpLeftRightMissileVData, * fpLeftRightMissileFData, * fpLeftLeftMissileVData, * fpLeftLeftMissileFData;
-    FILE* fpEnemyVData, * fpEnemyFData, * fpBulletVData, * fpBulletFData, * fp3retVData, * fp3retFData;
+    FILE* fpEnemyVData, * fpEnemyFData, * fpBulletVData, * fpBulletFData, * fp3retVData, * fp3retFData, * fpFieldVData, * fpFieldFData;
     
     fopen_s(&fpVData,maps.at("mainShipV").c_str(), "r");//vData.txt‚ðargs[0]‚É“ü‚ê‚Ä‚¢‚é
     fopen_s(&fpFData, maps.at("mainShipF").c_str(), "r");
@@ -477,6 +479,8 @@ void InitialProc(const std::unordered_map<std::string,std::string>& maps)
     fopen_s(&fpBulletFData, maps.at("bulletF").c_str(), "r");
     fopen_s(&fp3retVData, maps.at("3retV").c_str(), "r");
     fopen_s(&fp3retFData, maps.at("3retF").c_str(), "r");
+    fopen_s(&fpFieldVData, maps.at("fieldV").c_str(), "r");
+    fopen_s(&fpFieldFData, maps.at("fieldF").c_str(), "r");
 
     
 
@@ -650,6 +654,18 @@ void InitialProc(const std::unordered_map<std::string,std::string>& maps)
 
         while (fscanf_s(fpBulletFData, "%d, %d, %d", &Bulletlines[BulletlineDataSize * 3], &Bulletlines[BulletlineDataSize * 3 + 1], &Bulletlines[BulletlineDataSize * 3 + 2]) != EOF)
             BulletlineDataSize++;
+    }
+    if ((fpFieldVData == NULL) || (fpFieldFData == NULL)) {
+        printf("file error!!\n");
+        return;
+    }
+    else
+    {
+        while (fscanf_s(fpFieldVData, "%f, %f, %f", &Fieldvertex[FieldvertexDataSize * 3], &Fieldvertex[FieldvertexDataSize * 3 + 1], &Fieldvertex[FieldvertexDataSize * 3 + 2]) != EOF)
+            FieldvertexDataSize++;
+
+        while (fscanf_s(fpFieldFData, "%d, %d, %d", &Fieldlines[FieldlineDataSize * 3], &Fieldlines[FieldlineDataSize * 3 + 1], &Fieldlines[FieldlineDataSize * 3 + 2]) != EOF)
+            FieldlineDataSize++;
     }
 
 }
@@ -1158,6 +1174,8 @@ int main(int argc, char** argv)
     map.insert(std::make_pair("bulletF", "config/bulletFData.txt"));
     map.insert(std::make_pair("3retV", "config/3retVData.txt"));
     map.insert(std::make_pair("3retF", "config/3retFData.txt"));
+    map.insert(std::make_pair("fieldV", "config/fieldVData.txt"));
+    map.insert(std::make_pair("fieldF", "config/fieldFData.txt"));
 
     //for (const auto& m:n)
     //{
