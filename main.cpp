@@ -386,27 +386,30 @@ void disp()
 
 
         glPopMatrix();
-        if (boolBullet == true)
+        if (pauseBool == false && dead == false && timeOver == false)
         {
-            frameCount++;
-            if (frameCount > 100)
+
+            if (boolBullet == true)
             {
-                frameCount = 0;
-                movingBulletX[bulletNUM] = -_movingXPoint;
-                movingBulletY[bulletNUM] = -_movingYPoint;
-                bulletNUM++;
-                if (bulletNUM == 300)
+                frameCount++;
+                if (frameCount > 100)
                 {
-                    bulletNUM = 0;
+                    frameCount = 0;
+                    movingBulletX[bulletNUM] = -_movingXPoint;
+                    movingBulletY[bulletNUM] = -_movingYPoint;
+                    bulletNUM++;
+                    if (bulletNUM == 300)
+                    {
+                        bulletNUM = 0;
+                    }
                 }
             }
-        }
 #pragma omp parallel for
-        for (int i = 0; i < bulletNUM; i++)
-        {
-            Bullet(i);
+            for (int i = 0; i < bulletNUM; i++)
+            {
+                Bullet(i);
+            }
         }
-
         glutSwapBuffers();
         glFlush();
 }
@@ -696,7 +699,7 @@ void keyboard(unsigned char key, int x, int y)
             thirdSpec = true;
             pauseBool = true;
             timeOver = false;
-
+            boolBullet = false;
 
 
             memset(movingBulletX, 0.0, sizeof(movingBulletX));
