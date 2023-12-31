@@ -45,8 +45,6 @@ bool pause = false;
 bool thirdSpec = true;
 bool pauseBool = true;
 bool timeOver = false;
-//‚±‚Ì•¶š‚ÍŒ»İsub1‚É‚Ì‚İ•\¦‚³‚ê‚Ä‚¢‚Ü‚·B
-
 
 //int
 int bulletNUM = 0;
