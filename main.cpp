@@ -46,6 +46,8 @@ bool pause = false;
 bool thirdSpec = true;
 bool pauseBool = true;
 bool timeOver = false;
+bool goStraight = false;
+
 
 //int
 int bulletNUM = 0;
@@ -66,6 +68,7 @@ double movingBulletY[300];
 double movingBulletZ[300];
 double _movingXPoint;
 double _movingYPoint;
+double _movingZPoint;
 double enemyPosCheck[3];
 double RRPosCheck[3];
 double RLPosCheck[3];
@@ -76,8 +79,6 @@ double LLMissileCont = 0.0, LRMissileCont = 0.0, RLMissileCont = 0.0, RRMissileC
 
 //float
 float movingRRXPoint = 0, movingRRYPoint = 0, movingRLXPoint = 0, movingRLYPoint = 0, movingLRXPoint = 0, movingLRYPoint = 0, movingLLXPoint = 0, movingLLYPoint = 0;
-GLfloat light0pos[] = { 10.0, 10.0, 10.0, 0.5 };
-GLfloat light1pos[] = { 20.0, 20.0, 20.0, 10 };
 GLfloat red[] = { 1.0, 0.4, 0.3, 1.0 };  //赤
 GLfloat blue[] = { 0.4, 0.6, 1.0, 1.0 };  //青
 GLfloat green[] = { 0.2,1.0,0.4 };     //緑
@@ -89,6 +90,15 @@ float specular[] = { 1,1,1,1 };
 float ambient[] = { 0.1,0.1,0.1,1.0 };
 float light[] = { 1.0,1.0,1.0,0.0 };
 float enemyPos;
+
+//char
+char t_char[20];
+char t_char2[20];
+char t_char3[20];
+char t_char4[60];
+char t_char5[20];
+char t_char6[30];
+char t_char7[40];
 
 //vector
 std::pair<std::vector<double>, std::vector<double>> CoordinateXY;
@@ -111,16 +121,9 @@ void disp()
     ・テクスチャマッピングを用いて青空の描写
     */
 
-
+        GLfloat light0pos[] = { 10.0 - _movingXPoint, 10.0 - _movingYPoint, 7.0, 0.5 };
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        char t_char[20];
-        char t_char2[20];
-        char t_char3[20];
-        char t_char4[60];
-        char t_char5[20];
-        char t_char6[30];
-        char t_char7[40];
         if (dead == true)
         {
             sprintf_s(t_char5, "You are dead!");
@@ -161,7 +164,7 @@ void disp()
 
         if (thirdSpec == true)
         {
-            gluLookAt(0 - _movingXPoint, 1 - _movingYPoint, 10, 0 - _movingXPoint, 1 - _movingYPoint, 0, 0, 1, 0);
+            gluLookAt(0 - _movingXPoint, 1 - _movingYPoint, 10 - _movingZPoint, 0 - _movingXPoint, 1 - _movingYPoint, -_movingZPoint, 0, 1, 0);
         }
         else
         {
@@ -169,10 +172,11 @@ void disp()
 
         }
         glLightfv(GL_LIGHT0, GL_POSITION, light0pos);
-        glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
-        glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
-        glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
-        glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+
+        //glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
+        //glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
+        //glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
+        //glMaterialf(GL_FRONT, GL_SHININESS, shininess);
 
         //地面
         //glColor3f(1, 1, 1);
@@ -200,50 +204,50 @@ void disp()
         //glVertex3f(100, 40, 10);
         //glEnd();
 
-        if (pauseBool == false && dead == false && timeOver == false)
-        {
-            if (enemycreate == false)
-            {
-                randX = rand() % 2;
-                randY = rand() % 2;
+        //if (pauseBool == false && dead == false && timeOver == false)
+        //{
+        //    if (enemycreate == false)
+        //    {
+        //        randX = rand() % 2;
+        //        randY = rand() % 2;
 
-                randXnum = rand() % 10;
-                randYnum = rand() % 4;
+        //        randXnum = rand() % 10;
+        //        randYnum = rand() % 4;
 
-                enemyPos = 0;
-                if (randX == 1)
-                {
-                    randXNUM = -randXnum;
-                }
-                else
-                {
-                    randXNUM = randXnum;
-                }
-                if (randY == 1)
-                {
-                    randYNUM = -randYnum;
-                }
-                else
-                {
-                    randYNUM = randYnum;
-                }
-                enemycreate = true;
-            }
-            else
-            {
-                if (enemyPos > 68.0)
-                {
-                    enemycreate = false;
-                    damage++;
-                }
-                glPushMatrix();
-                glTranslatef(randXNUM, randYNUM, -70 + enemyPos);
-                glVertexPointer(3, GL_FLOAT, 0, Enemyvertex);
-                makeEnemy(1, 1, 1);
-                glPopMatrix();
-                enemyPos += 0.03;
-            }
-        }
+        //        enemyPos = 0;
+        //        if (randX == 1)
+        //        {
+        //            randXNUM = -randXnum;
+        //        }
+        //        else
+        //        {
+        //            randXNUM = randXnum;
+        //        }
+        //        if (randY == 1)
+        //        {
+        //            randYNUM = -randYnum;
+        //        }
+        //        else
+        //        {
+        //            randYNUM = randYnum;
+        //        }
+        //        enemycreate = true;
+        //    }
+        //    else
+        //    {
+        //        if (enemyPos > 68.0)
+        //        {
+        //            enemycreate = false;
+        //            damage++;
+        //        }
+        //        glPushMatrix();
+        //        glTranslatef(randXNUM, randYNUM, -70 + enemyPos);
+        //        glVertexPointer(3, GL_FLOAT, 0, Enemyvertex);
+        //        makeEnemy(1, 1, 1);
+        //        glPopMatrix();
+        //        enemyPos += 0.03;
+        //    }
+        //}
 
         glEnableClientState(GL_VERTEX_ARRAY);
 
@@ -329,9 +333,13 @@ void disp()
         //}
         
 
+        if (goStraight == true)
+        {
+            _movingZPoint += 0.008;
+        }
 
         glPushMatrix();
-        glTranslatef(-_movingXPoint, -_movingYPoint, 0);
+        glTranslatef(-_movingXPoint, -_movingYPoint, -_movingZPoint);
 
         if (checkRightRightFire == false)
         {
@@ -436,14 +444,15 @@ void reshape(int width, int height)
     gluPerspective(60.0, (double)width / height, 1.0, 100.0);
     glMatrixMode(GL_MODELVIEW);
 
-    _movingXPoint = 0;
-    _movingYPoint = 0;
     y = 0;
 }
 
 
 void InitialProc(const std::unordered_map<std::string,std::string>& maps)
 {
+    _movingXPoint = 0;
+    _movingYPoint = 0;
+    _movingZPoint = 0;
     memset(movingBulletX, 0.0, sizeof(movingBulletX));
     memset(movingBulletY, 0.0, sizeof(movingBulletY));
     memset(movingBulletZ, 0.0, sizeof(movingBulletZ));
@@ -669,10 +678,22 @@ void InitialProc(const std::unordered_map<std::string,std::string>& maps)
     }
 
 }
+void keyUp(unsigned char key, int x, int y)
+{
+    if (key == 'w')
+    {
+        goStraight = false;
+    }
+}
 void keyboard(unsigned char key, int x, int y)
 {
     if (key == 0x1b)
         exit(0);
+
+    if (key == 'w')
+    {
+        goStraight = true;
+    }
     if (key == 'v')
     {
         if (thirdSpec == true)
@@ -1190,6 +1211,7 @@ int main(int argc, char** argv)
 
     InitialProc(map);
     glutKeyboardFunc(keyboard);
+    glutKeyboardUpFunc(keyUp);
     glutSpecialFunc(spe);
     glutSpecialUpFunc(speUP);
     glutMouseFunc(mouse);
