@@ -119,7 +119,11 @@ void disp()
     ・追加ミサイルオブジェクトや追加パーツオブジェクトの追加
     ・敵オブジェクトを倒した際にお金をドロップ、そのお金を使って機体のアップグレードできるようにしたい
     ・テクスチャマッピングを用いて青空の描写
+    ・移動時の機体の方向ベクトル、ミサイルと機銃の発射方向ベクトルは常にディスプレイ座標Z軸向きになるようにする
+    ・ディスプレイ座標軸に発射・移動するものをワールド座標系に変換してdisp()内で描画する
     */
+
+
 
         GLfloat light0pos[] = { 10.0 - _movingXPoint, 10.0 - _movingYPoint, 7.0, 0.5 };
 
@@ -164,10 +168,17 @@ void disp()
 
         if (thirdSpec == true)
         {
-            gluLookAt(0 - _movingXPoint, 1 - _movingYPoint, 10 - _movingZPoint, 0 - _movingXPoint, 1 - _movingYPoint, -_movingZPoint, 0, 1, 0);
+            glRotatef(-_movingXPoint, 0, 0, 1);
+            glRotatef(-_movingYPoint, 1, 0, 1);
+            gluLookAt(0 , 1 , 10 , 0 , 1 , 0, 0, 1, 1);
+            glTranslatef(0, 0, _movingZPoint);
         }
+
         else
         {
+            glRotatef(_movingXPoint, 1, 0, 1);
+            glRotatef(_movingYPoint, 0, 1, 1);
+
             gluLookAt(0 - _movingXPoint, 1 - _movingYPoint, -3, 0 - _movingXPoint, 1 - _movingYPoint, -5, 0, 1, 0);
 
         }
@@ -193,7 +204,7 @@ void disp()
         //glVertex3f(-100, -20, -200);
         //glEnd();
         glVertexPointer(3, GL_FLOAT, 0, Fieldvertex);
-        makeField(1, 1, 1);
+        makeField(0.3, 0.3, 0.3);
         //天井
         //glColor3f(1, 1, 1);
         //glBegin(GL_QUADS);
@@ -262,7 +273,7 @@ void disp()
             }
             glPushMatrix();
 
-            glTranslatef(movingRRXPoint + RRMissileCont, movingRRYPoint, rightrightPos);
+            glTranslatef(movingRRXPoint + RRMissileCont, movingRRYPoint, rightrightPos - _movingZPoint);
             glVertexPointer(3, GL_FLOAT, 0, RightRightMissilevertex);
             makeRightRightMissile(0.3, 0.3, 0.3);
             glPopMatrix();
@@ -279,14 +290,14 @@ void disp()
                 RLMissileCont = 0.0;
             }
             glPushMatrix();
-            glTranslatef(movingRLXPoint + RLMissileCont, movingRLYPoint, rightleftPos);
+            glTranslatef(movingRLXPoint + RLMissileCont, movingRLYPoint, rightleftPos - _movingZPoint);
             glVertexPointer(3, GL_FLOAT, 0, RightLeftMissilevertex);
             makeRightLeftMissile(0.3, 0.3, 0.3);
             glPopMatrix();
             rightleftPos -= 0.1;
             RLMissileCont -= 0.2 / 300.0;
         }
-
+        
         if (checkLeftRightFire == true)
         {
             if (leftrightPos < -150.0)
@@ -296,7 +307,7 @@ void disp()
                 LRMissileCont = 0.0;
             }
             glPushMatrix();
-            glTranslatef(movingLRXPoint + LRMissileCont, movingLRYPoint, leftrightPos);
+            glTranslatef(movingLRXPoint + LRMissileCont, movingLRYPoint, leftrightPos - _movingZPoint);
             glVertexPointer(3, GL_FLOAT, 0, LeftRightMissilevertex);
             makeLeftRightMissile(0.3, 0.3, 0.3);
             glPopMatrix();
@@ -313,7 +324,7 @@ void disp()
                 LLMissileCont = 0.0;
             }
             glPushMatrix();
-            glTranslatef(movingLLXPoint + LLMissileCont, movingLLYPoint, leftleftPos);
+            glTranslatef(movingLLXPoint + LLMissileCont, movingLLYPoint, leftleftPos - _movingZPoint);
             glVertexPointer(3, GL_FLOAT, 0, LeftLeftMissilevertex);
             makeLeftLeftMissile(0.3, 0.3, 0.3);
             glPopMatrix();
@@ -335,11 +346,14 @@ void disp()
 
         if (goStraight == true)
         {
-            _movingZPoint += 0.008;
+            _movingZPoint += 0.016;
         }
 
         glPushMatrix();
-        glTranslatef(-_movingXPoint, -_movingYPoint, -_movingZPoint);
+        glRotatef(_movingXPoint, 0, 0, 1);
+        glRotatef(_movingYPoint, 1, 0, 1);
+        glTranslatef(0, 0, -_movingZPoint);
+
 
         if (checkRightRightFire == false)
         {
@@ -415,25 +429,21 @@ void disp()
 #pragma omp parallel for
             for (int i = 0; i < bulletNUM; i++)
             {
-                Bullet(i);
+                if (movingBulletZ[i] > -100)
+                {
+                    glPushMatrix();
+                    glTranslatef(movingBulletX[i], movingBulletY[i], movingBulletZ[i] - _movingZPoint);
+                    glVertexPointer(3, GL_FLOAT, 0, Bulletvertex);
+                    makeBullet(1, 1, 1);
+                    glPopMatrix();
+                    movingBulletZ[i] -= 0.2;
+                }
             }
         }
         glutSwapBuffers();
         glFlush();
 }
 
-void Bullet(int num)
-{
-    if (movingBulletZ[num] > -100)
-    {
-        glPushMatrix();
-        glTranslatef(movingBulletX[num], movingBulletY[num], movingBulletZ[num]);
-        glVertexPointer(3, GL_FLOAT, 0, Bulletvertex);
-        makeBullet(1, 1, 1);
-        glPopMatrix();
-        movingBulletZ[num] -= 0.2;
-    }
-}
 
 void reshape(int width, int height) 
 {
@@ -1082,8 +1092,8 @@ void passiveMotion(int x, int y)
 {
     if (pauseBool == false && dead == false && timeOver == false)
     {
-        _movingXPoint -= (x - 900) / 50.0;
-        _movingYPoint += (y - 500) / 50.0;
+        _movingXPoint -= (x - 900) / 50.0;//dx
+        _movingYPoint += (y - 500) / 50.0;//dy
         glutWarpPointer(900, 500);
         glutMouseFunc(mouse);
     }
