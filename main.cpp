@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "Dll1/config_ImportFiles.h"
 #include "GL/freeglut.h"
 #include "GLFW/glfw3.h"
 #include "warship_3d.h"
