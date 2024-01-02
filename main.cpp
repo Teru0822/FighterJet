@@ -1,6 +1,6 @@
-#include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "Dll1/config_ImportFiles.h"
 #include "GL/freeglut.h"
 #include "GLFW/glfw3.h"
 #include "warship_3d.h"
@@ -21,11 +21,8 @@
 #include "bullet.h"
 #include "3ret.h"
 #include "field.h"
-#include <vector>
-#include <string>
-#include <map>
-#include <unordered_map>
 #include <omp.h>
+#include <unordered_map>
 #include <string>
 //#pragma comment (lib, "lib\x86\freeglut.lib")
 //bool
@@ -1169,6 +1166,14 @@ int main(int argc, char** argv)
     glutCreateWindow("Ace combat");
     glutWarpPointer(900, 500);
 
+    _movingXPoint = 0;
+    _movingYPoint = 0;
+    _movingZPoint = 0;
+    memset(movingBulletX, 0.0, sizeof(movingBulletX));
+    memset(movingBulletY, 0.0, sizeof(movingBulletY));
+    memset(movingBulletZ, 0.0, sizeof(movingBulletZ));
+
+
     //glutSetCursor(GLUT_CURSOR_NONE);
     //std::vector<std::string> args;
     //for (int i = 1; i < argc; ++i)
@@ -1218,7 +1223,6 @@ int main(int argc, char** argv)
     glutGameModeString("1920x1080:1@60");  // 解像度とビット深度を適切に指定
     glutEnterGameMode();
     glutSetCursor(GLUT_CURSOR_NONE);
-
     InitialProc(map);
     glutKeyboardFunc(keyboard);
     glutKeyboardUpFunc(keyUp);
