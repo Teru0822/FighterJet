@@ -166,36 +166,7 @@ void disp()
         }
         glLightfv(GL_LIGHT0, GL_POSITION, light0pos);
 
-        //glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
-        //glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
-        //glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
-        //glMaterialf(GL_FRONT, GL_SHININESS, shininess);
-
-        //地面
-        //glColor3f(1, 1, 1);
-        //glBegin(GL_TRIANGLES);
-        //glNormal3f(0, 1, 0);
-        //glVertex3f(100, -20, -200);
-        //glVertex3f(100, -20, 10);
-        //glVertex3f(-100, -20, -200);
-        //glEnd();
-        //glBegin(GL_TRIANGLES);
-        //glNormal3f(0, 1, 0);
-        //glVertex3f(-100, -20, 10);
-        //glVertex3f(100, -20, 10);
-        //glVertex3f(-100, -20, -200);
-        //glEnd();
         makeField(0.3, 0.3, 0.3);
-        //天井
-        //glColor3f(1, 1, 1);
-        //glBegin(GL_QUADS);
-        //glNormal3f(0, 1, 0);
-        //glVertex3f(100, 40, -200);
-        //glVertex3f(-100, 40, -200);
-        //glVertex3f(-100, 40, 10);
-        //glVertex3f(100, 40, 10);
-        //glEnd();
-
         //if (pauseBool == false && dead == false && timeOver == false)
         //{
         //    if (enemycreate == false)
@@ -925,53 +896,6 @@ int main(int argc, char** argv)
     memset(movingBulletY, 0.0, sizeof(movingBulletY));
     memset(movingBulletZ, 0.0, sizeof(movingBulletZ));
 
-
-    //glutSetCursor(GLUT_CURSOR_NONE);
-    //std::vector<std::string> args;
-    //for (int i = 1; i < argc; ++i)
-    //{
-    //    args.push_back(argv[i]);
-    //}
-
-    //std::unordered_map<std::string, std::string> map;
-    //map.insert(std::make_pair("mainShipV", "config/vData.txt"));
-    //map.insert(std::make_pair("mainShipF", "config/fData.txt"));
-    //map.insert(std::make_pair("cockPitV", "config/cockPitVData.txt"));
-    //map.insert(std::make_pair("cockPitF", "config/cockPitFData.txt"));
-    //map.insert(std::make_pair("enemyV", "config/enemyVData.txt"));
-    //map.insert(std::make_pair("enemyF", "config/enemyFData.txt"));
-    //map.insert(std::make_pair("fire1V", "config/fire1VData.txt"));
-    //map.insert(std::make_pair("fire1F", "config/fire1FData.txt"));
-    //map.insert(std::make_pair("fire2V", "config/fire2VData.txt"));
-    //map.insert(std::make_pair("fire2F", "config/fire2FData.txt"));
-    //map.insert(std::make_pair("RRMissileV", "config/missileRightRightVData.txt"));
-    //map.insert(std::make_pair("RRMissileF", "config/missileRightRightFData.txt"));
-    //map.insert(std::make_pair("RLMissileV", "config/missileRightLeftVData.txt"));
-    //map.insert(std::make_pair("RLMissileF", "config/missileRightLeftFData.txt"));
-    //map.insert(std::make_pair("LLMissileV", "config/missileLeftLeftVData.txt"));
-    //map.insert(std::make_pair("LLMissileF", "config/missileLeftLeftFData.txt"));
-    //map.insert(std::make_pair("LRMissileV", "config/missileLeftRightVData.txt"));
-    //map.insert(std::make_pair("LRMissileF", "config/missileLeftRightFData.txt"));
-    //map.insert(std::make_pair("retV", "config/retVData.txt"));
-    //map.insert(std::make_pair("retF", "config/retFData.txt"));
-    //map.insert(std::make_pair("tailWingV", "config/tailWingVData.txt"));
-    //map.insert(std::make_pair("tailWingF", "config/tailWingFData.txt"));
-    //map.insert(std::make_pair("wingV", "config/wingVData.txt"));
-    //map.insert(std::make_pair("wingF", "config/wingFData.txt"));
-    //map.insert(std::make_pair("bulletV", "config/bulletVData.txt"));
-    //map.insert(std::make_pair("bulletF", "config/bulletFData.txt"));
-    //map.insert(std::make_pair("3retV", "config/3retVData.txt"));
-    //map.insert(std::make_pair("3retF", "config/3retFData.txt"));
-    //map.insert(std::make_pair("fieldV", "config/fieldVData.txt"));
-    //map.insert(std::make_pair("fieldF", "config/fieldFData.txt"));
-
-    //for (const auto& m:n)
-    //{
-    //    m.second;
-    //}
-    //glRotatef(30, 1.0, 0, 0);
-    //glRotatef(30, 0, 1.0, 0);
-    //glScalef(0.8, 0.8, 0.8);
     glutGameModeString("1920x1080:1@60");  // 解像度とビット深度を適切に指定
     glutEnterGameMode();
     glutSetCursor(GLUT_CURSOR_NONE);

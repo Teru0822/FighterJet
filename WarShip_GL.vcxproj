@@ -141,10 +141,6 @@
   <ItemGroup>
     <ClInclude Include="func.h" />
     <ClInclude Include="makefloor.h" />
-    <ClInclude Include="ret.h" />
-    <ClInclude Include="tailWing.h" />
-    <ClInclude Include="warship_3d.h" />
-    <ClInclude Include="wing.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="cockPitFData.txt" />
