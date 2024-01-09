@@ -128,6 +128,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="func.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <ClCompile Include="main.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -136,20 +139,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="3ret.h" />
-    <ClInclude Include="ammo.h" />
-    <ClInclude Include="bullet.h" />
-    <ClInclude Include="cockPit.h" />
-    <ClInclude Include="enemy.h" />
-    <ClInclude Include="field.h" />
-    <ClInclude Include="fire1.h" />
-    <ClInclude Include="fire2.h" />
+    <ClInclude Include="func.h" />
     <ClInclude Include="makefloor.h" />
-    <ClInclude Include="misile.h" />
-    <ClInclude Include="missileLeftLeft.h" />
-    <ClInclude Include="missileLeftRight.h" />
-    <ClInclude Include="missileRightLeft.h" />
-    <ClInclude Include="missileRightRight.h" />
     <ClInclude Include="ret.h" />
     <ClInclude Include="tailWing.h" />
     <ClInclude Include="warship_3d.h" />
