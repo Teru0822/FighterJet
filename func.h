@@ -15,6 +15,7 @@ void makeFire1(float, float, float);
 void makeFire2(float, float, float);
 void makeTailWing(float, float, float);
 void makeCockPit(float, float, float);
+void makeEnemy(float, float, float);
 void makeRet();
 
 void readPoints();

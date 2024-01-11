@@ -124,6 +124,23 @@ namespace field
     int lineDataSize = 0;
 
 }
+void makeEnemy(float r, float g, float b)
+{
+    glVertexPointer(3, GL_FLOAT, 0, enemy::vertex);
+
+    glPointSize(3);
+    glColor3f(r, g, b);
+    glBegin(GL_TRIANGLES);
+    {
+        for (int i = 0; i < enemy::lineDataSize; i++) {
+            glArrayElement(enemy::lines[i * 3]);   //0
+            glArrayElement(enemy::lines[i * 3 + 1]);  //1
+            glArrayElement(enemy::lines[i * 3 + 2]);  //2
+        }
+    }
+    glEnd();
+
+}
 void makeShip(float r, float g, float b)
 {
     glVertexPointer(3, GL_FLOAT, 0, mainShip::vertex);

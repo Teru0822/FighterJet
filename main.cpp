@@ -150,67 +150,67 @@ void disp()
 
         if (thirdSpec == true)
         {
-            glRotatef(-_movingXPoint, 0, 0, 1);
-            glRotatef(-_movingYPoint, 1, 0, 1);
-            gluLookAt(0 , 1 , 10 , 0 , 1 , 0, 0, 1, 1);
+            //glRotatef(-_movingXPoint, 0, 0, 1);
+            //glRotatef(-_movingYPoint, 1, 0, 1);
+            //glTranslatef(-_movingXPoint, -_movingYPoint, 0);
+            gluLookAt(0 -_movingXPoint, 1-_movingYPoint , 10 , 0 -_movingXPoint, 1-_movingYPoint , 0, 0, 1, 1);
             glTranslatef(0, 0, _movingZPoint);
         }
 
         else
         {
-            glRotatef(_movingXPoint, 1, 0, 1);
-            glRotatef(_movingYPoint, 0, 1, 1);
-
+            //glRotatef(_movingXPoint, 1, 0, 1);
+            //glRotatef(_movingYPoint, 0, 1, 1);
+            glTranslatef(-_movingXPoint, -_movingYPoint, 0);
             gluLookAt(0 - _movingXPoint, 1 - _movingYPoint, -3, 0 - _movingXPoint, 1 - _movingYPoint, -5, 0, 1, 0);
 
         }
         glLightfv(GL_LIGHT0, GL_POSITION, light0pos);
 
         makeField(0.3, 0.3, 0.3);
-        //if (pauseBool == false && dead == false && timeOver == false)
-        //{
-        //    if (enemycreate == false)
-        //    {
-        //        randX = rand() % 2;
-        //        randY = rand() % 2;
+        if (pauseBool == false && dead == false && timeOver == false)
+        {
+            if (enemycreate == false)
+            {
+                randX = rand() % 2;
+                randY = rand() % 2;
 
-        //        randXnum = rand() % 10;
-        //        randYnum = rand() % 4;
+                randXnum = rand() % 10;
+                randYnum = rand() % 4;
 
-        //        enemyPos = 0;
-        //        if (randX == 1)
-        //        {
-        //            randXNUM = -randXnum;
-        //        }
-        //        else
-        //        {
-        //            randXNUM = randXnum;
-        //        }
-        //        if (randY == 1)
-        //        {
-        //            randYNUM = -randYnum;
-        //        }
-        //        else
-        //        {
-        //            randYNUM = randYnum;
-        //        }
-        //        enemycreate = true;
-        //    }
-        //    else
-        //    {
-        //        if (enemyPos > 68.0)
-        //        {
-        //            enemycreate = false;
-        //            damage++;
-        //        }
-        //        glPushMatrix();
-        //        glTranslatef(randXNUM, randYNUM, -70 + enemyPos);
-        //        glVertexPointer(3, GL_FLOAT, 0, Enemyvertex);
-        //        makeEnemy(1, 1, 1);
-        //        glPopMatrix();
-        //        enemyPos += 0.03;
-        //    }
-        //}
+                enemyPos = 0;
+                if (randX == 1)
+                {
+                    randXNUM = -randXnum;
+                }
+                else
+                {
+                    randXNUM = randXnum;
+                }
+                if (randY == 1)
+                {
+                    randYNUM = -randYnum;
+                }
+                else
+                {
+                    randYNUM = randYnum;
+                }
+                enemycreate = true;
+            }
+            else
+            {
+                if (enemyPos > 68.0)
+                {
+                    enemycreate = false;
+                    damage++;
+                }
+                glPushMatrix();
+                glTranslatef(randXNUM, randYNUM, -70 + enemyPos);
+                makeEnemy(1, 1, 1);
+                glPopMatrix();
+                enemyPos += 0.03;
+            }
+        }
 
         glEnableClientState(GL_VERTEX_ARRAY);
 
@@ -298,9 +298,9 @@ void disp()
         }
 
         glPushMatrix();
-        glRotatef(_movingXPoint, 0, 0, 1);
-        glRotatef(_movingYPoint, 1, 0, 0);
-        glTranslatef(0, 0, -_movingZPoint);
+        //glRotatef(_movingXPoint, 0, 0, 1);
+        //glRotatef(_movingYPoint, 1, 0, 0);
+        glTranslatef(-_movingXPoint, -_movingYPoint, -_movingZPoint);
 
 
         if (checkRightRightFire == false)
@@ -403,9 +403,6 @@ void InitialProc()
     memset(movingBulletX, 0.0, sizeof(movingBulletX));
     memset(movingBulletY, 0.0, sizeof(movingBulletY));
     memset(movingBulletZ, 0.0, sizeof(movingBulletZ));    
-
-    
-
 
 }
 void keyUp(unsigned char key, int x, int y)
