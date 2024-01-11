@@ -8,16 +8,13 @@ namespace mainShip
     int lines[ARRAY_MAX];
     int vertexDataSize = 0;
     int lineDataSize = 0;
-
 }
-
 namespace ret
 {
     float vertex[ARRAY_MAX];
     int lines[ARRAY_MAX];
     int vertexDataSize = 0;
     int lineDataSize = 0;
-
 }
 namespace fire1
 {
@@ -25,7 +22,6 @@ namespace fire1
     int lines[ARRAY_MAX];
     int vertexDataSize = 0;
     int lineDataSize = 0;
-
 }
 namespace fire2
 {
@@ -33,7 +29,6 @@ namespace fire2
     int lines[ARRAY_MAX];
     int vertexDataSize = 0;
     int lineDataSize = 0;
-
 }
 namespace thirdRet
 {
@@ -41,7 +36,6 @@ namespace thirdRet
     int lines[ARRAY_MAX];
     int vertexDataSize = 0;
     int lineDataSize = 0;
-
 }
 namespace wing
 {
@@ -49,7 +43,6 @@ namespace wing
     int lines[ARRAY_MAX];
     int vertexDataSize = 0;
     int lineDataSize = 0;
-
 }
 
 namespace tail
@@ -58,7 +51,6 @@ namespace tail
     int lines[ARRAY_MAX];
     int vertexDataSize = 0;
     int lineDataSize = 0;
-
 }
 namespace cockPit
 {
@@ -66,7 +58,6 @@ namespace cockPit
     int lines[ARRAY_MAX];
     int vertexDataSize = 0;
     int lineDataSize = 0;
-
 }
 namespace RR
 {
@@ -74,7 +65,6 @@ namespace RR
     int lines[ARRAY_MAX];
     int vertexDataSize = 0;
     int lineDataSize = 0;
-
 }
 namespace RL
 {
@@ -82,7 +72,6 @@ namespace RL
     int lines[ARRAY_MAX];
     int vertexDataSize = 0;
     int lineDataSize = 0;
-
 }
 namespace LR
 {
@@ -90,7 +79,6 @@ namespace LR
     int lines[ARRAY_MAX];
     int vertexDataSize = 0;
     int lineDataSize = 0;
-
 }
 namespace LL
 {
@@ -98,7 +86,6 @@ namespace LL
     int lines[ARRAY_MAX];
     int vertexDataSize = 0;
     int lineDataSize = 0;
-
 }
 namespace enemy
 {
@@ -106,7 +93,6 @@ namespace enemy
     int lines[ARRAY_MAX];
     int vertexDataSize = 0;
     int lineDataSize = 0;
-
 }
 namespace bullet
 {
@@ -114,7 +100,6 @@ namespace bullet
     int lines[ARRAY_MAX];
     int vertexDataSize = 0;
     int lineDataSize = 0;
-
 }
 namespace field
 {
@@ -122,7 +107,6 @@ namespace field
     int lines[ARRAY_MAX];
     int vertexDataSize = 0;
     int lineDataSize = 0;
-
 }
 void makeEnemy(float r, float g, float b)
 {
@@ -209,7 +193,6 @@ void makeCockPit(float r, float g, float b)
     glEnd();
 
 }
-
 void makeWing(float r, float g, float b)
 {
     glVertexPointer(3, GL_FLOAT, 0, wing::vertex);
@@ -261,7 +244,6 @@ void makeRet()
     }
     glEnd();
 }
-
 void makeFire2(float r, float g, float b)
 {
     glVertexPointer(3, GL_FLOAT, 0, fire2::vertex);
@@ -279,7 +261,6 @@ void makeFire2(float r, float g, float b)
     }
     glEnd();
 }
-
 void makeRightRightMissile(float r, float g, float b)
 {
     glVertexPointer(3, GL_FLOAT, 0, RR::vertex);
@@ -344,7 +325,6 @@ void makeLeftLeftMissile(float r, float g, float b)
     }
     glEnd();
 }
-
 void makeField(float r, float g, float b)
 {
     glVertexPointer(3, GL_FLOAT, 0, field::vertex);

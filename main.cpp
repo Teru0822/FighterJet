@@ -41,7 +41,6 @@ int keyNum = NULL;
 int randXNUM, randYNUM, randX,randY,randXnum,randYnum;
 int HitCheck;
 int list;
-
 //double
 double x,y;
 double movingBulletX[300];
@@ -70,7 +69,7 @@ float diffuse[] = { 1,1,1,1 };
 float specular[] = { 1,1,1,1 };
 float ambient[] = { 0.1,0.1,0.1,1.0 };
 float light[] = { 1.0,1.0,1.0,0.0 };
-float enemyPos;
+float enemyZPos;
 
 //char
 char t_char[20];
@@ -81,6 +80,7 @@ char t_char5[20];
 char t_char6[30];
 char t_char7[40];
 
+char t_charBullet[20];
 //vector
 std::pair<std::vector<double>, std::vector<double>> CoordinateXY;
 
@@ -129,6 +129,9 @@ void disp()
             DISPLAY_TEXT(95, 95, t_char2);
             sprintf_s(t_char3, "HP: %d", 10 - damage);
             DISPLAY_TEXT(2, 2, t_char3);
+            sprintf_s(t_charBullet, "ammo: %d", 300 - bulletNUM);
+            DISPLAY_TEXT(90, 2, t_charBullet);
+
         }
         if(pauseBool == true)
         {
@@ -178,7 +181,7 @@ void disp()
                 randXnum = rand() % 10;
                 randYnum = rand() % 4;
 
-                enemyPos = 0;
+                enemyZPos = 0;
                 if (randX == 1)
                 {
                     randXNUM = -randXnum;
@@ -199,16 +202,16 @@ void disp()
             }
             else
             {
-                if (enemyPos > 68.0)
+                if (enemyZPos > 68.0)
                 {
                     enemycreate = false;
                     damage++;
                 }
                 glPushMatrix();
-                glTranslatef(randXNUM, randYNUM, -70 + enemyPos);
+                glTranslatef(randXNUM, randYNUM, -70 + enemyZPos);
                 makeEnemy(1, 1, 1);
                 glPopMatrix();
-                enemyPos += 0.03;
+                enemyZPos += 0.03;
             }
         }
 
@@ -291,7 +294,6 @@ void disp()
         //    glPopMatrix();
         //}
         
-
         if (goStraight == true)
         {
             _movingZPoint += 0.016;
@@ -341,38 +343,58 @@ void disp()
 
         makeCockPit(0.8, 0.8, 0.8);
 
-
-
         glPopMatrix();
         if (pauseBool == false && dead == false && timeOver == false)
         {
 
             if (boolBullet == true)
             {
-                frameCount++;
-                if (frameCount > 100)
+                if (bulletNUM < 300)
                 {
-                    frameCount = 0;
-                    movingBulletX[bulletNUM] = -_movingXPoint;
-                    movingBulletY[bulletNUM] = -_movingYPoint;
-                    bulletNUM++;
-                    if (bulletNUM == 300)
+                    frameCount++;
+                    if (frameCount > 50)
                     {
-                        bulletNUM = 0;
+                        frameCount = 0;
+                        movingBulletX[bulletNUM] = -_movingXPoint;
+                        movingBulletY[bulletNUM] = -_movingYPoint;
+                        bulletNUM++;
+
                     }
                 }
             }
 #pragma omp parallel for
-            for (int i = 0; i < bulletNUM; i++)
+            for (int i = 0; i < bulletNUM; i++)//’eŠÛ‚Ì‘½d•`ŽÊ
             {
-                if (movingBulletZ[i] > -100)
+                if (movingBulletZ[i] > -500)
                 {
+                    if (movingBulletX[i] > enemyPosCheck[0] - 0.62 && movingBulletX[i] < enemyPosCheck[0] + 0.62)
+                    {
+                        if (movingBulletY[i] > enemyPosCheck[1] - 0.62 && movingBulletY[i] < enemyPosCheck[1] + 0.62)
+                        {
+                            if (movingBulletZ[i] > enemyPosCheck[2] - 0.62 && movingBulletZ[i] < enemyPosCheck[2] + 0.62)
+                            {
+                                enemycreate = false;
+                                score++;
+                                movingBulletY[i] += 60;
+                            }
+                        }
+                    }
                     glPushMatrix();
                     glTranslatef(movingBulletX[i], movingBulletY[i], movingBulletZ[i] - _movingZPoint);
                     makeBullet(1, 1, 1);
                     glPopMatrix();
-                    movingBulletZ[i] -= 0.2;
+                    movingBulletZ[i] -= 0.6;
+
                 }
+            
+            }
+            if (movingBulletZ[299] < -480)
+            {
+                bulletNUM = 0;
+                memset(movingBulletX, 0.0, sizeof(movingBulletX));
+                memset(movingBulletY, 0.0, sizeof(movingBulletY));
+                memset(movingBulletZ, 0.0, sizeof(movingBulletZ));
+
             }
         }
         glutSwapBuffers();
@@ -395,7 +417,6 @@ void reshape(int width, int height)
 
 void InitialProc()
 {
-
     readPoints();
     _movingXPoint = 0;
     _movingYPoint = 0;
@@ -567,7 +588,7 @@ void speUP(int key, int x, int y)
 
 void idle(void)
 {
-    if (damage == 10)
+    if (damage == 50)
     {
         dead = true;
         retry = true;
@@ -577,7 +598,7 @@ void idle(void)
 
     enemyPosCheck[0] = randXNUM;
     enemyPosCheck[1] = randYNUM;
-    enemyPosCheck[2] = enemyPos - 70;
+    enemyPosCheck[2] = enemyZPos - 70;
     if (checkRightRightFire == true)
     {
         RRPosCheck[0] = movingRRXPoint;
@@ -639,7 +660,6 @@ void idle(void)
             score++;
             HitCheck = 0;
         }
-
     }
     HitCheck = 0;
     for (int i = 0; i < 3; i++)
@@ -829,7 +849,6 @@ void clickingMotion(int x, int y)//ƒNƒŠƒbƒN‚µ‚È‚ª‚ç“®‚©‚³‚È‚¢‚Æ“Ç‚Ü‚È‚¢
 void DISPLAY_TEXT(int x, int y, char* string) {
     glDisable(GL_LIGHTING);
     glDisable(GL_LIGHT0);
-
     glPushAttrib(GL_ENABLE_BIT);
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
@@ -868,7 +887,7 @@ void timerCallback(int x)
     if (pauseBool == false && dead == false && timeOver == false)
     {
         lastSec += 1;
-        if (lastSec == 40)
+        if (lastSec == 60)
         {
             retry = true;
             GUI = false;

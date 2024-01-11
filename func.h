@@ -19,4 +19,6 @@ void makeEnemy(float, float, float);
 void makeRet();
 
 void readPoints();
+
+void rote(float angle, float x, float y, float z);
 #endif 
