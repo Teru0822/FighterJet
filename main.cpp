@@ -7,6 +7,7 @@
 #include <string>
 
 
+
 #include "func.h"
 //#pragma comment (lib, "lib\x86\freeglut.lib")
 //bool
@@ -41,6 +42,8 @@ int keyNum = NULL;
 int randXNUM, randYNUM, randX,randY,randXnum,randYnum;
 int HitCheck;
 int list;
+int bulletHit = 0;
+
 //double
 double x,y;
 double movingBulletX[300];
@@ -88,28 +91,9 @@ std::pair<std::vector<double>, std::vector<double>> CoordinateXY;
 void DISPLAY_TEXT(int x, int y, char* string);
 void DRAW_STRING(int x, int y, char* string, void* font);
 void Bullet(int num);
-void disp()
+void DRAW_MONITER_1(int x, int y, int w, int h)
 {
-    /*
-    今後の追加予定
-    ・OpenMPを用いたGPUによる並列処理(これはfor分の中身が大きすぎて抜け出せなくなるような場所に使用するべき)
-    ・機銃の追加
-    ・機銃とミサイルにそれぞれ攻撃力を設定し、それぞれを切り替えるキーバインドの追加
-    ・オンライン対戦機能の追加
-    ・NPCオブジェクトの追加
-    ・追加ミサイルオブジェクトや追加パーツオブジェクトの追加
-    ・敵オブジェクトを倒した際にお金をドロップ、そのお金を使って機体のアップグレードできるようにしたい
-    ・テクスチャマッピングを用いて青空の描写
-    ・移動時の機体の方向ベクトル、ミサイルと機銃の発射方向ベクトルは常にディスプレイ座標Z軸向きになるようにする
-    ・ディスプレイ座標軸に発射・移動するものをワールド座標系に変換してdisp()内で描画する
-    ・分割コンパイル
-    */
-
-
-
-        GLfloat light0pos[] = { 10.0 - _movingXPoint, 10.0 - _movingYPoint, 7.0, 0.5 };
-
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glViewport(x, y, w, h);
         if (dead == true)
         {
             sprintf_s(t_char5, "You are dead!");
@@ -149,13 +133,13 @@ void disp()
 
         }
         glShadeModel(GL_SMOOTH);
-        glLoadIdentity();
 
         if (thirdSpec == true)
         {
             //glRotatef(-_movingXPoint, 0, 0, 1);
             //glRotatef(-_movingYPoint, 1, 0, 1);
             //glTranslatef(-_movingXPoint, -_movingYPoint, 0);
+
             gluLookAt(0 -_movingXPoint, 1-_movingYPoint , 10 , 0 -_movingXPoint, 1-_movingYPoint , 0, 0, 1, 1);
             glTranslatef(0, 0, _movingZPoint);
         }
@@ -168,7 +152,6 @@ void disp()
             gluLookAt(0 - _movingXPoint, 1 - _movingYPoint, -3, 0 - _movingXPoint, 1 - _movingYPoint, -5, 0, 1, 0);
 
         }
-        glLightfv(GL_LIGHT0, GL_POSITION, light0pos);
 
         makeField(0.3, 0.3, 0.3);
         if (pauseBool == false && dead == false && timeOver == false)
@@ -231,7 +214,7 @@ void disp()
             glTranslatef(movingRRXPoint + RRMissileCont, movingRRYPoint, rightrightPos - _movingZPoint);
             makeRightRightMissile(0.3, 0.3, 0.3);
             glPopMatrix();
-            rightrightPos -= 0.1;
+            rightrightPos -= 0.5;
             RRMissileCont -= 0.5 / 300.0;
         }
 
@@ -247,7 +230,7 @@ void disp()
             glTranslatef(movingRLXPoint + RLMissileCont, movingRLYPoint, rightleftPos - _movingZPoint);
             makeRightLeftMissile(0.3, 0.3, 0.3);
             glPopMatrix();
-            rightleftPos -= 0.1;
+            rightleftPos -= 0.5;
             RLMissileCont -= 0.2 / 300.0;
         }
         
@@ -263,7 +246,7 @@ void disp()
             glTranslatef(movingLRXPoint + LRMissileCont, movingLRYPoint, leftrightPos - _movingZPoint);
             makeLeftRightMissile(0.3, 0.3, 0.3);
             glPopMatrix();
-            leftrightPos -= 0.1;
+            leftrightPos -= 0.5;
             LRMissileCont += 0.2 / 300.0;
         }
 
@@ -279,7 +262,7 @@ void disp()
             glTranslatef(movingLLXPoint + LLMissileCont, movingLLYPoint, leftleftPos - _movingZPoint);
             makeLeftLeftMissile(0.3, 0.3, 0.3);
             glPopMatrix();
-            leftleftPos -= 0.1;
+            leftleftPos -= 0.5;
             LLMissileCont += 0.5 / 300.0;
         }
         
@@ -352,7 +335,7 @@ void disp()
                 if (bulletNUM < 300)
                 {
                     frameCount++;
-                    if (frameCount > 50)
+                    if (frameCount > 10)
                     {
                         frameCount = 0;
                         movingBulletX[bulletNUM] = -_movingXPoint;
@@ -373,9 +356,18 @@ void disp()
                         {
                             if (movingBulletZ[i] > enemyPosCheck[2] - 0.62 && movingBulletZ[i] < enemyPosCheck[2] + 0.62)
                             {
-                                enemycreate = false;
-                                score++;
-                                movingBulletY[i] += 60;
+                                if (bulletHit < 10)
+                                {
+                                    movingBulletY[i] += 60;
+                                    bulletHit++;
+                                }
+                                else
+                                {
+                                    enemycreate = false;
+                                    score++;
+                                    movingBulletY[i] += 60;
+                                    bulletHit = 0;
+                                }
                             }
                         }
                     }
@@ -383,7 +375,7 @@ void disp()
                     glTranslatef(movingBulletX[i], movingBulletY[i], movingBulletZ[i] - _movingZPoint);
                     makeBullet(1, 1, 1);
                     glPopMatrix();
-                    movingBulletZ[i] -= 0.6;
+                    movingBulletZ[i] -= 1.2;
 
                 }
             
@@ -397,8 +389,265 @@ void disp()
 
             }
         }
-        glutSwapBuffers();
-        glFlush();
+        //glFlush();
+
+}
+void DRAW_MONITER_2(int x, int y, int w, int h)
+{
+    glViewport(x, y, w, h);
+    gluLookAt(0, 10, -5,
+        0, 0, 0,
+        0.0, 0.0, -1.0);
+    makeField(0.3, 0.3, 0.3);
+    if (pauseBool == false && dead == false && timeOver == false)
+    {
+        if (enemycreate == false)
+        {
+            randX = rand() % 2;
+            randY = rand() % 2;
+
+            randXnum = rand() % 10;
+            randYnum = rand() % 4;
+
+            enemyZPos = 0;
+            if (randX == 1)
+            {
+                randXNUM = -randXnum;
+            }
+            else
+            {
+                randXNUM = randXnum;
+            }
+            if (randY == 1)
+            {
+                randYNUM = -randYnum;
+            }
+            else
+            {
+                randYNUM = randYnum;
+            }
+            enemycreate = true;
+        }
+        else
+        {
+            if (enemyZPos > 68.0)
+            {
+                enemycreate = false;
+                damage++;
+            }
+            glPushMatrix();
+            glTranslatef(randXNUM, randYNUM, -70 + enemyZPos);
+            makeEnemy(1, 1, 1);
+            glPopMatrix();
+            enemyZPos += 0.03;
+        }
+    }
+    glEnableClientState(GL_VERTEX_ARRAY);
+    if (checkRightRightFire == true)
+    {
+        if (rightrightPos < -150.0)
+        {
+            checkRightRightFire = false;
+            rightrightPos = 0;
+            RRMissileCont = 0.0;
+        }
+        glPushMatrix();
+
+        glTranslatef(movingRRXPoint + RRMissileCont, movingRRYPoint, rightrightPos - _movingZPoint);
+        makeRightRightMissile(0.3, 0.3, 0.3);
+        glPopMatrix();
+        rightrightPos -= 0.5;
+        RRMissileCont -= 0.5 / 300.0;
+    }
+
+    if (checkRightLeftFire == true)
+    {
+        if (rightleftPos < -150.0)
+        {
+            checkRightLeftFire = false;
+            rightleftPos = 0;
+            RLMissileCont = 0.0;
+        }
+        glPushMatrix();
+        glTranslatef(movingRLXPoint + RLMissileCont, movingRLYPoint, rightleftPos - _movingZPoint);
+        makeRightLeftMissile(0.3, 0.3, 0.3);
+        glPopMatrix();
+        rightleftPos -= 0.5;
+        RLMissileCont -= 0.2 / 300.0;
+    }
+
+    if (checkLeftRightFire == true)
+    {
+        if (leftrightPos < -150.0)
+        {
+            checkLeftRightFire = false;
+            leftrightPos = 0;
+            LRMissileCont = 0.0;
+        }
+        glPushMatrix();
+        glTranslatef(movingLRXPoint + LRMissileCont, movingLRYPoint, leftrightPos - _movingZPoint);
+        makeLeftRightMissile(0.3, 0.3, 0.3);
+        glPopMatrix();
+        leftrightPos -= 0.5;
+        LRMissileCont += 0.2 / 300.0;
+    }
+
+    if (checkLeftLeftFire == true)
+    {
+        if (leftleftPos < -150.0)
+        {
+            checkLeftLeftFire = false;
+            leftleftPos = 0;
+            LLMissileCont = 0.0;
+        }
+        glPushMatrix();
+        glTranslatef(movingLLXPoint + LLMissileCont, movingLLYPoint, leftleftPos - _movingZPoint);
+        makeLeftLeftMissile(0.3, 0.3, 0.3);
+        glPopMatrix();
+        leftleftPos -= 0.5;
+        LLMissileCont += 0.5 / 300.0;
+    }
+
+    //boolBulletがtrueの時for分を作成し続ける
+
+    //if (boolBullet == true)
+    //{
+    //    glPushMatrix();
+    //    glTranslatef(movingBulletX[bulletNUM], movingBulletY[bulletNUM], movingBulletZ[bulletNUM]);
+    //    glVertexPointer(3, GL_FLOAT, 0, Bulletvertex);
+    //    makeBullet(0.3, 0.3, 0.3);
+    //    glPopMatrix();
+    //}
+
+    if (goStraight == true)
+    {
+        _movingZPoint += 0.016;
+    }
+
+    glPushMatrix();
+    glTranslatef(-_movingXPoint, -_movingYPoint, -_movingZPoint);
+    if (checkRightRightFire == false)
+    {
+        makeRightRightMissile(0.3, 0.3, 0.3);
+    }
+    if (checkRightLeftFire == false)
+    {
+        makeRightLeftMissile(0.3, 0.3, 0.3);
+    }
+    if (checkLeftRightFire == false)
+    {
+        makeLeftRightMissile(0.3, 0.3, 0.3);
+    }
+    if (checkLeftLeftFire == false)
+    {
+        makeLeftLeftMissile(0.3, 0.3, 0.3);
+    }
+
+    makeShip(0.3, 0.3, 0.3);
+
+    makeWing(0.4, 0.4, 0.4);
+
+    makeFire1(0.44, 0.4, 0.4);
+
+    makeFire2(0.4, 0.4, 0.44);
+
+    makeTailWing(0.3, 0.3, 0.3);
+
+    makeCockPit(0.8, 0.8, 0.8);
+
+    glPopMatrix();
+    if (pauseBool == false && dead == false && timeOver == false)
+    {
+
+        if (boolBullet == true)
+        {
+            if (bulletNUM < 300)
+            {
+                frameCount++;
+                if (frameCount > 10)
+                {
+                    frameCount = 0;
+                    movingBulletX[bulletNUM] = -_movingXPoint;
+                    movingBulletY[bulletNUM] = -_movingYPoint;
+                    bulletNUM++;
+
+                }
+            }
+        }
+#pragma omp parallel for
+        for (int i = 0; i < bulletNUM; i++)//弾丸の多重描写
+        {
+            if (movingBulletZ[i] > -500)
+            {
+                if (movingBulletX[i] > enemyPosCheck[0] - 0.62 && movingBulletX[i] < enemyPosCheck[0] + 0.62)
+                {
+                    if (movingBulletY[i] > enemyPosCheck[1] - 0.62 && movingBulletY[i] < enemyPosCheck[1] + 0.62)
+                    {
+                        if (movingBulletZ[i] > enemyPosCheck[2] - 0.62 && movingBulletZ[i] < enemyPosCheck[2] + 0.62)
+                        {
+                            if (bulletHit < 10)
+                            {
+                                movingBulletY[i] += 60;
+                                bulletHit++;
+                            }
+                            else
+                            {
+                                enemycreate = false;
+                                score++;
+                                movingBulletY[i] += 60;
+                                bulletHit = 0;
+                            }
+                        }
+                    }
+                }
+                glPushMatrix();
+                glTranslatef(movingBulletX[i], movingBulletY[i], movingBulletZ[i] - _movingZPoint);
+                makeBullet(1, 1, 1);
+                glPopMatrix();
+                movingBulletZ[i] -= 1.2;
+
+            }
+
+        }
+        if (movingBulletZ[299] < -480)
+        {
+            bulletNUM = 0;
+            memset(movingBulletX, 0.0, sizeof(movingBulletX));
+            memset(movingBulletY, 0.0, sizeof(movingBulletY));
+            memset(movingBulletZ, 0.0, sizeof(movingBulletZ));
+
+        }
+    }
+    glFlush();
+
+}
+
+void disp()
+{
+    /*
+    今後の追加予定
+    ・OpenMPを用いたGPUによる並列処理(これはfor分の中身が大きすぎて抜け出せなくなるような場所に使用するべき)
+    ・機銃の追加
+    ・機銃とミサイルにそれぞれ攻撃力を設定し、それぞれを切り替えるキーバインドの追加
+    ・オンライン対戦機能の追加
+    ・NPCオブジェクトの追加
+    ・追加ミサイルオブジェクトや追加パーツオブジェクトの追加
+    ・敵オブジェクトを倒した際にお金をドロップ、そのお金を使って機体のアップグレードできるようにしたい
+    ・テクスチャマッピングを用いて青空の描写
+    ・移動時の機体の方向ベクトル、ミサイルと機銃の発射方向ベクトルは常にディスプレイ座標Z軸向きになるようにする
+    ・ディスプレイ座標軸に発射・移動するものをワールド座標系に変換してdisp()内で描画する
+    ・分割コンパイル
+    */
+    GLfloat lightpos[] = { 10.0 - _movingXPoint, 10.0 - _movingYPoint, 7.0, 0.5 };
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);   /* 画面を消去 */
+    glMatrixMode(GL_MODELVIEW);  /* 幾何（描画位置など設定する）モード */
+    glLoadIdentity();  /* 幾何を初期化する */
+    glLightfv(GL_LIGHT0, GL_POSITION, lightpos);  // 光源の位置
+    
+    DRAW_MONITER_1(0, 0, 1980, 1080);  /*メイン画面呼び出し*/
+    //DRAW_MONITER_2(1600, 0, 320, 240); /*俯瞰画面呼び出し*/
+    glutSwapBuffers();
+
 }
 
 
@@ -588,7 +837,7 @@ void speUP(int key, int x, int y)
 
 void idle(void)
 {
-    if (damage == 50)
+    if (damage == 10)
     {
         dead = true;
         retry = true;
@@ -887,7 +1136,7 @@ void timerCallback(int x)
     if (pauseBool == false && dead == false && timeOver == false)
     {
         lastSec += 1;
-        if (lastSec == 60)
+        if (lastSec == 40)
         {
             retry = true;
             GUI = false;
@@ -912,7 +1161,7 @@ int main(int argc, char** argv)
     memset(movingBulletY, 0.0, sizeof(movingBulletY));
     memset(movingBulletZ, 0.0, sizeof(movingBulletZ));
 
-    glutGameModeString("1920x1080:1@60");  // 解像度とビット深度を適切に指定
+    //glutGameModeString("1920x1080:1@60");  // 解像度とビット深度を適切に指定
     glutEnterGameMode();
     glutSetCursor(GLUT_CURSOR_NONE);
     InitialProc();
